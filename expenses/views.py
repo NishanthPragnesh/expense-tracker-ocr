@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .forms import ExpenseForm
 from .models import Expense
 from PIL import Image
+from django.db.models import Q
 import pytesseract
 
 def upload_expense(request):
@@ -23,5 +24,14 @@ def upload_expense(request):
     return render(request, 'expenses/upload_expense.html', {'form': form})
 
 def expense_list(request):
-    expenses = Expense.objects.all().order_by('-date')
-    return render(request, 'expenses/expense_list.html', {'expenses': expenses})
+    query = request.GET.get('q', '')
+    expenses = Expense.objects.all()
+
+    if query:
+        expenses = expenses.filter(
+            Q(title__icontains=query) |
+            Q(amount__icontains=query) |
+            Q(date__icontains=query)
+        )
+
+    return render(request, 'expenses/expense_list.html', {'expenses': expenses, 'query': query})

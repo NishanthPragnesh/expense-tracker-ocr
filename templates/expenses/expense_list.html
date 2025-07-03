@@ -5,24 +5,37 @@
 </head>
 <body>
     <h1>Uploaded Expenses</h1>
+    <form method="get" action="">
+    <input type="text" name="q" value="{{ query }}" placeholder="Search by title, amount or date">
+    <button type="submit">Search</button>
+    </form>
     <table border="1">
-        <tr>
-            <th>Title</th>
-            <th>Amount</th>
-            <th>Date</th>
-            <th>Receipt</th>
-            <th>Notes</th>
-        </tr>
-        {% for expense in expenses %}
-        <tr>
-            <td>{{ expense.title }}</td>
-            <td>{{ expense.amount }}</td>
-            <td>{{ expense.date }}</td>
-            <td><a href="{{ expense.receipt.url }}" target="_blank">View Receipt</a></td>
-            <td>{{ expense.notes|default:"-" }}</td>
-        </tr>
-        {% endfor %}
-    </table>
+    <tr>
+        <th>Title</th>
+        <th>Amount</th>
+        <th>Date</th>
+        <th>Receipt</th>
+        <th>Notes</th>
+    </tr>
+    {% for expense in expenses %}
+    <tr>
+        <td>{{ expense.title }}</td>
+        <td>{{ expense.amount }}</td>
+        <td>{{ expense.date|date:"M. j, Y" }}</td>
+        <td>
+            {% if expense.receipt %}
+                <a href="{{ expense.receipt.url }}" target="_blank">
+                    <img src="{{ expense.receipt.url }}" alt="Receipt" width="100" />
+                </a>
+            {% else %}
+                No Receipt
+            {% endif %}
+        </td>
+        <td>{{ expense.notes|truncatewords:20 }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
     <a href="{% url 'upload_expense' %}">Upload Another Expense</a>
 </body>
 </html>
