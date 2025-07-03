@@ -5,25 +5,20 @@
 </head>
 <body>
     <h1>Uploaded Expenses</h1>
-    <form method="GET" style="margin-bottom: 20px;">
-    <input type="text" name="title" placeholder="Search Title" value="{{ request.GET.title }}">
-    
-    <input type="number" step="0.01" name="min_amount" placeholder="Min Amount" value="{{ request.GET.min_amount }}">
-    <input type="number" step="0.01" name="max_amount" placeholder="Max Amount" value="{{ request.GET.max_amount }}">
-    
-    <input type="date" name="start_date" value="{{ request.GET.start_date }}">
-    <input type="date" name="end_date" value="{{ request.GET.end_date }}">
-    
+    <form method="get" action="">
+    <input type="text" name="q" value="{{ query }}" placeholder="Search by title, amount, date, or notes" />
+
     <select name="sort">
-        <option value="">-- Sort By --</option>
-        <option value="amount_asc" {% if request.GET.sort == 'amount_asc' %}selected{% endif %}>Amount (Low to High)</option>
-        <option value="amount_desc" {% if request.GET.sort == 'amount_desc' %}selected{% endif %}>Amount (High to Low)</option>
-        <option value="date_asc" {% if request.GET.sort == 'date_asc' %}selected{% endif %}>Date (Oldest First)</option>
-        <option value="date_desc" {% if request.GET.sort == 'date_desc' %}selected{% endif %}>Date (Newest First)</option>
+        <option value="">Sort By</option>
+        <option value="title_asc" {% if sort == 'title_asc' %}selected{% endif %}>Title A-Z</option>
+        <option value="title_desc" {% if sort == 'title_desc' %}selected{% endif %}>Title Z-A</option>
+        <option value="amount_asc" {% if sort == 'amount_asc' %}selected{% endif %}>Amount Low to High</option>
+        <option value="amount_desc" {% if sort == 'amount_desc' %}selected{% endif %}>Amount High to Low</option>
+        <option value="date_asc" {% if sort == 'date_asc' %}selected{% endif %}>Date Oldest</option>
+        <option value="date_desc" {% if sort == 'date_desc' %}selected{% endif %}>Date Newest</option>
     </select>
-    
+
     <button type="submit">Apply</button>
-    <a href="{% url 'expense_list' %}">Reset</a>
     </form>
 
     <table border="1">

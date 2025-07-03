@@ -30,11 +30,20 @@ def expense_list(request):
     expenses = Expense.objects.filter(user=request.user)
 
     # --- Filtering ---
+    query = request.GET.get('q', '')
     title_query = request.GET.get('title', '')
     min_amount = request.GET.get('min_amount', '')
     max_amount = request.GET.get('max_amount', '')
     start_date = request.GET.get('start_date', '')
     end_date = request.GET.get('end_date', '')
+
+    if query:
+        expenses = expenses.filter(
+            Q(title__icontains=query) |
+            Q(notes__icontains=query) |
+            Q(amount__icontains=query) |
+            Q(date__icontains=query)
+        )
 
     if title_query:
         expenses = expenses.filter(title__icontains=title_query)
@@ -61,7 +70,11 @@ def expense_list(request):
 
     # --- Sorting ---
     sort_by = request.GET.get('sort', '')
-    if sort_by == 'amount_asc':
+    if sort_by == 'title_asc':
+        expenses = expenses.order_by('title')
+    elif sort_by == 'title_desc':
+        expenses = expenses.order_by('-title')
+    elif sort_by == 'amount_asc':
         expenses = expenses.order_by('amount')
     elif sort_by == 'amount_desc':
         expenses = expenses.order_by('-amount')
@@ -70,5 +83,10 @@ def expense_list(request):
     elif sort_by == 'date_desc':
         expenses = expenses.order_by('-date')
 
-    return render(request, 'expenses/expense_list.html', {'expenses': expenses})
+    return render(request, 'expenses/expense_list.html', {
+        'expenses': expenses,
+        'query': query,
+        'sort': sort_by
+    })
+
 
