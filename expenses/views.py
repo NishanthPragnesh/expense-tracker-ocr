@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect
 from .forms import ExpenseForm
 from .models import Expense
+from django.contrib.auth.decorators import login_required
 from PIL import Image
 from django.db.models import Q
+from datetime import datetime
 import pytesseract
 
 def upload_expense(request):
@@ -23,15 +25,50 @@ def upload_expense(request):
         form = ExpenseForm()
     return render(request, 'expenses/upload_expense.html', {'form': form})
 
+@login_required
 def expense_list(request):
-    query = request.GET.get('q', '')
-    expenses = Expense.objects.all()
+    expenses = Expense.objects.filter(user=request.user)
 
-    if query:
-        expenses = expenses.filter(
-            Q(title__icontains=query) |
-            Q(amount__icontains=query) |
-            Q(date__icontains=query)
-        )
+    # --- Filtering ---
+    title_query = request.GET.get('title', '')
+    min_amount = request.GET.get('min_amount', '')
+    max_amount = request.GET.get('max_amount', '')
+    start_date = request.GET.get('start_date', '')
+    end_date = request.GET.get('end_date', '')
 
-    return render(request, 'expenses/expense_list.html', {'expenses': expenses, 'query': query})
+    if title_query:
+        expenses = expenses.filter(title__icontains=title_query)
+
+    if min_amount:
+        expenses = expenses.filter(amount__gte=min_amount)
+
+    if max_amount:
+        expenses = expenses.filter(amount__lte=max_amount)
+
+    if start_date:
+        try:
+            start = datetime.strptime(start_date, '%Y-%m-%d')
+            expenses = expenses.filter(date__gte=start)
+        except ValueError:
+            pass
+
+    if end_date:
+        try:
+            end = datetime.strptime(end_date, '%Y-%m-%d')
+            expenses = expenses.filter(date__lte=end)
+        except ValueError:
+            pass
+
+    # --- Sorting ---
+    sort_by = request.GET.get('sort', '')
+    if sort_by == 'amount_asc':
+        expenses = expenses.order_by('amount')
+    elif sort_by == 'amount_desc':
+        expenses = expenses.order_by('-amount')
+    elif sort_by == 'date_asc':
+        expenses = expenses.order_by('date')
+    elif sort_by == 'date_desc':
+        expenses = expenses.order_by('-date')
+
+    return render(request, 'expenses/expense_list.html', {'expenses': expenses})
+
