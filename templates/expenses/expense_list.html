@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Expenses</title>
+</head>
+<body>
+    <h1>Uploaded Expenses</h1>
+    <table border="1">
+        <tr>
+            <th>Title</th>
+            <th>Amount</th>
+            <th>Date</th>
+            <th>Receipt</th>
+            <th>Notes</th>
+        </tr>
+        {% for expense in expenses %}
+        <tr>
+            <td>{{ expense.title }}</td>
+            <td>{{ expense.amount }}</td>
+            <td>{{ expense.date }}</td>
+            <td><a href="{{ expense.receipt.url }}" target="_blank">View Receipt</a></td>
+            <td>{{ expense.notes|default:"-" }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <a href="{% url 'upload_expense' %}">Upload Another Expense</a>
+</body>
+</html>

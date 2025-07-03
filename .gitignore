@@ -12,4 +12,7 @@ venv/
 *.log
 
 # Media
-/media/
+media/
+*.sqlite3
+.env
+
