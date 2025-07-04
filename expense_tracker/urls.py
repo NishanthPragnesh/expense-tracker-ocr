@@ -10,8 +10,11 @@ urlpatterns = [
     path('upload/', views.upload_expense, name='upload_expense'),
     path('expenses/', views.expense_list, name='expense_list'),
     path('accounts/', include('accounts.urls')),
+    path('dashboard/', views.admin_dashboard, name='admin_dashboard'),
 ]
 
 # Media file serving in development
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+

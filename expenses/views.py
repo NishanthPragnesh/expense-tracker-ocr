@@ -5,6 +5,8 @@ from django.contrib.auth.decorators import login_required
 from PIL import Image
 from django.db.models import Q
 from datetime import datetime
+from django.contrib.auth.models import User
+from django.contrib.admin.views.decorators import staff_member_required
 import pytesseract
 
 def upload_expense(request):
@@ -88,5 +90,22 @@ def expense_list(request):
         'query': query,
         'sort': sort_by
     })
+
+@staff_member_required
+def admin_dashboard(request):
+    total_users = User.objects.count()
+    total_expenses = Expense.objects.count()
+    latest_expense = Expense.objects.order_by('-id').first()
+    
+    # Top 5 users by number of expenses
+    top_users = User.objects.annotate(expense_count=models.Count('expense')).order_by('-expense_count')[:5]
+
+    context = {
+        'total_users': total_users,
+        'total_expenses': total_expenses,
+        'latest_expense': latest_expense,
+        'top_users': top_users,
+    }
+    return render(request, 'expenses/admin_dashboard.html', context)
 
 

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Dashboard</title>
+</head>
+<body>
+    <h1>📊 Admin Dashboard</h1>
+
+    <p><strong>Total Users:</strong> {{ total_users }}</p>
+    <p><strong>Total Expenses:</strong> {{ total_expenses }}</p>
+
+    {% if latest_expense %}
+        <p><strong>Latest Expense:</strong> {{ latest_expense.title }} - ₹{{ latest_expense.amount }} by {{ latest_expense.user.username }}</p>
+    {% else %}
+        <p>No expenses uploaded yet.</p>
+    {% endif %}
+
+    <h3>🏆 Top 5 Users by Expense Count:</h3>
+    <ul>
+        {% for user in top_users %}
+            <li>{{ user.username }} - {{ user.expense_count }} expenses</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'expense_list' %}">Back to Expenses</a>
+</body>
+</html>
