@@ -1,15 +1,13 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Upload Expense</title>
-</head>
-<body>
-    <h1>Upload Expense</h1>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Upload</button>
-    </form>
-    <a href="{% url 'expense_list' %}">View All Expenses</a>
-</body>
-</html>
+{% extends 'expenses/base.html' %}
+
+{% block title %}Upload Expense{% endblock %}
+
+{% block content %}
+<h2>Upload Expense</h2>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+<a class="btn btn-link mt-2" href="{% url 'expense_list' %}">View All Expenses</a>
+{% endblock %}

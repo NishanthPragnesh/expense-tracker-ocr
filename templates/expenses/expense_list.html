@@ -1,14 +1,14 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Expenses</title>
-</head>
-<body>
-    <h1>Uploaded Expenses</h1>
-    <form method="get" action="">
-    <input type="text" name="q" value="{{ query }}" placeholder="Search by title, amount, date, or notes" />
+{% extends 'expenses/base.html' %}
 
-    <select name="sort">
+{% block title %}Expense List{% endblock %}
+
+{% block content %}
+<h2>Expense List</h2>
+
+<form method="get" action="" class="mb-3">
+    <input type="text" name="q" value="{{ query }}" placeholder="Search..." class="form-control mb-2" />
+
+    <select name="sort" class="form-select mb-2">
         <option value="">Sort By</option>
         <option value="title_asc" {% if sort == 'title_asc' %}selected{% endif %}>Title A-Z</option>
         <option value="title_desc" {% if sort == 'title_desc' %}selected{% endif %}>Title Z-A</option>
@@ -18,36 +18,39 @@
         <option value="date_desc" {% if sort == 'date_desc' %}selected{% endif %}>Date Newest</option>
     </select>
 
-    <button type="submit">Apply</button>
-    </form>
+    <button type="submit" class="btn btn-primary">Apply</button>
+</form>
 
-    <table border="1">
-    <tr>
-        <th>Title</th>
-        <th>Amount</th>
-        <th>Date</th>
-        <th>Receipt</th>
-        <th>Notes</th>
-    </tr>
-    {% for expense in expenses %}
-    <tr>
-        <td>{{ expense.title }}</td>
-        <td>{{ expense.amount }}</td>
-        <td>{{ expense.date|date:"M. j, Y" }}</td>
-        <td>
-            {% if expense.receipt %}
-                <a href="{{ expense.receipt.url }}" target="_blank">
-                    <img src="{{ expense.receipt.url }}" alt="Receipt" width="100" />
-                </a>
-            {% else %}
-                No Receipt
-            {% endif %}
-        </td>
-        <td>{{ expense.notes|truncatewords:20 }}</td>
-    </tr>
-    {% endfor %}
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Title</th>
+            <th>Amount</th>
+            <th>Date</th>
+            <th>Receipt</th>
+            <th>Notes</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for expense in expenses %}
+        <tr>
+            <td>{{ expense.title }}</td>
+            <td>₹{{ expense.amount }}</td>
+            <td>{{ expense.date|date:"M. j, Y" }}</td>
+            <td>
+                {% if expense.receipt %}
+                    <a href="{{ expense.receipt.url }}" target="_blank">
+                        <img src="{{ expense.receipt.url }}" alt="Receipt" width="100" />
+                    </a>
+                {% else %}
+                    No Receipt
+                {% endif %}
+            </td>
+            <td>{{ expense.notes|truncatewords:20 }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
 </table>
 
-    <a href="{% url 'upload_expense' %}">Upload Another Expense</a>
-</body>
-</html>
+<a href="{% url 'upload_expense' %}" class="btn btn-link">Upload Another Expense</a>
+{% endblock %}

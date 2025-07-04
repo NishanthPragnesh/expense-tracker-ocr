@@ -3,11 +3,12 @@ from .forms import ExpenseForm
 from .models import Expense
 from django.contrib.auth.decorators import login_required
 from PIL import Image
-from django.db.models import Q
+from django.db.models import Q, Count
 from datetime import datetime
 from django.contrib.auth.models import User
 from django.contrib.admin.views.decorators import staff_member_required
 import pytesseract
+import json
 
 def upload_expense(request):
     if request.method == 'POST':
@@ -26,6 +27,7 @@ def upload_expense(request):
     else:
         form = ExpenseForm()
     return render(request, 'expenses/upload_expense.html', {'form': form})
+
 
 @login_required
 def expense_list(request):
@@ -91,21 +93,26 @@ def expense_list(request):
         'sort': sort_by
     })
 
+
 @staff_member_required
 def admin_dashboard(request):
     total_users = User.objects.count()
     total_expenses = Expense.objects.count()
     latest_expense = Expense.objects.order_by('-id').first()
-    
+
     # Top 5 users by number of expenses
-    top_users = User.objects.annotate(expense_count=models.Count('expense')).order_by('-expense_count')[:5]
+    top_users_qs = User.objects.annotate(expense_count=Count('expense')).order_by('-expense_count')[:5]
+
+    top_user_labels = json.dumps([user.username for user in top_users_qs])
+    top_user_data = json.dumps([user.expense_count for user in top_users_qs])
 
     context = {
         'total_users': total_users,
         'total_expenses': total_expenses,
         'latest_expense': latest_expense,
-        'top_users': top_users,
+        'top_users': top_users_qs,
+        'top_user_labels': top_user_labels,
+        'top_user_data': top_user_data,
     }
+
     return render(request, 'expenses/admin_dashboard.html', context)
-
-
