@@ -7,8 +7,10 @@ from django.db.models import Q, Count
 from datetime import datetime
 from django.contrib.auth.models import User
 from django.contrib.admin.views.decorators import staff_member_required
+from django.http import HttpResponse
 import pytesseract
 import json
+import csv
 
 def upload_expense(request):
     if request.method == 'POST':
@@ -27,7 +29,6 @@ def upload_expense(request):
     else:
         form = ExpenseForm()
     return render(request, 'expenses/upload_expense.html', {'form': form})
-
 
 @login_required
 def expense_list(request):
@@ -93,7 +94,6 @@ def expense_list(request):
         'sort': sort_by
     })
 
-
 @staff_member_required
 def admin_dashboard(request):
     total_users = User.objects.count()
@@ -116,3 +116,28 @@ def admin_dashboard(request):
     }
 
     return render(request, 'expenses/admin_dashboard.html', context)
+
+@login_required
+def export_expenses_csv(request):
+    expenses = Expense.objects.filter(user=request.user)
+
+    # Re-apply filters for export
+    query = request.GET.get('q', '')
+    if query:
+        expenses = expenses.filter(
+            Q(title__icontains=query) |
+            Q(notes__icontains=query) |
+            Q(amount__icontains=query) |
+            Q(date__icontains=query)
+        )
+
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="expenses.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['Title', 'Amount', 'Date', 'Notes'])
+
+    for expense in expenses:
+        writer.writerow([expense.title, expense.amount, expense.date, expense.notes])
+
+    return response

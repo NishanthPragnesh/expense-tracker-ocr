@@ -51,6 +51,7 @@
         {% endfor %}
     </tbody>
 </table>
+<a href="{% url 'export_expenses_csv' %}?q={{ query }}" class="btn btn-success">⬇️ Download CSV</a>
 
 <a href="{% url 'upload_expense' %}" class="btn btn-link">Upload Another Expense</a>
 {% endblock %}

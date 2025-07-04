@@ -11,6 +11,7 @@ urlpatterns = [
     path('expenses/', views.expense_list, name='expense_list'),
     path('accounts/', include('accounts.urls')),
     path('dashboard/', views.admin_dashboard, name='admin_dashboard'),
+    path('export/csv/', views.export_expenses_csv, name='export_expenses_csv'),
 ]
 
 # Media file serving in development
