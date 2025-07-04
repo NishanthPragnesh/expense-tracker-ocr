@@ -47,7 +47,7 @@
                 {% endif %}
             </td>
             <td>
-                {% if expense.notes|trim %}
+                {% if expense.notes and expense.notes.strip %}
                     {{ expense.notes|truncatewords:20 }}
                 {% else %}
                     <em>No notes extracted</em>
