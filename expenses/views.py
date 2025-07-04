@@ -12,15 +12,22 @@ import pytesseract
 import json
 import csv
 
+@login_required
 def upload_expense(request):
     if request.method == 'POST':
         form = ExpenseForm(request.POST, request.FILES)
         if form.is_valid():
-            expense = form.save()
+            expense = form.save(commit=False)
+            expense.user = request.user
+            expense.save()
+
             try:
                 img = Image.open(expense.receipt.path)
                 text = pytesseract.image_to_string(img)
-                expense.notes = text.strip()[:1000]
+                if text.strip():
+                    expense.notes = text.strip()[:1000]
+                else:
+                    expense.notes = "No readable text found in receipt"
                 expense.save()
             except Exception as e:
                 expense.notes = f"Error reading image: {e}"

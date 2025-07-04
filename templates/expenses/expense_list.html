@@ -3,9 +3,9 @@
 {% block title %}Expense List{% endblock %}
 
 {% block content %}
-<h2>Expense List</h2>
+<h1>Expense List</h1>
 
-<form method="get" action="" class="mb-3">
+<form method="get" action="">
     <input type="text" name="q" value="{{ query }}" placeholder="Search..." class="form-control mb-2" />
 
     <select name="sort" class="form-select mb-2">
@@ -18,7 +18,7 @@
         <option value="date_desc" {% if sort == 'date_desc' %}selected{% endif %}>Date Newest</option>
     </select>
 
-    <button type="submit" class="btn btn-primary">Apply</button>
+    <button type="submit" class="btn btn-primary mb-3">Apply</button>
 </form>
 
 <table class="table table-striped">
@@ -36,22 +36,28 @@
         <tr>
             <td>{{ expense.title }}</td>
             <td>₹{{ expense.amount }}</td>
-            <td>{{ expense.date|date:"M. j, Y" }}</td>
+            <td>{{ expense.date|date:"M. d, Y" }}</td>
             <td>
                 {% if expense.receipt %}
                     <a href="{{ expense.receipt.url }}" target="_blank">
-                        <img src="{{ expense.receipt.url }}" alt="Receipt" width="100" />
+                        <img src="{{ expense.receipt.url }}" alt="Receipt" width="100">
                     </a>
                 {% else %}
                     No Receipt
                 {% endif %}
             </td>
-            <td>{{ expense.notes|truncatewords:20 }}</td>
+            <td>
+                {% if expense.notes %}
+                    {{ expense.notes|truncatewords:20 }}
+                {% else %}
+                    <em>No notes extracted</em>
+                {% endif %}
+            </td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
-<a href="{% url 'export_expenses_csv' %}?q={{ query }}" class="btn btn-success">⬇️ Download CSV</a>
 
-<a href="{% url 'upload_expense' %}" class="btn btn-link">Upload Another Expense</a>
+<a href="{% url 'export_expenses_csv' %}" class="btn btn-success me-2">🟩 Download CSV</a>
+<a href="{% url 'upload_expense' %}">Upload Another Expense</a>
 {% endblock %}
