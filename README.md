@@ -66,8 +66,6 @@ Start the development server:
 
 > python manage.py runserver
 
-Visit http://127.0.0.1:8000/ and log in!
-
 ## ☁️ AWS Deployment
 
 Follow these steps to deploy on an EC2 instance with MySQL and S3 storage:
