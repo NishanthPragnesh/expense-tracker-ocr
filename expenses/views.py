@@ -11,6 +11,16 @@ from django.http import HttpResponse
 import pytesseract
 import json
 import csv
+from django.shortcuts import redirect
+
+from django.shortcuts import redirect
+
+def redirect_to_dashboard(request):
+    if request.user.is_authenticated:
+        return redirect('admin_dashboard')
+    else:
+        return redirect('/accounts/login/')
+
 
 @login_required
 def upload_expense(request):
@@ -148,3 +158,4 @@ def export_expenses_csv(request):
         writer.writerow([expense.title, expense.amount, expense.date, expense.notes])
 
     return response
+
