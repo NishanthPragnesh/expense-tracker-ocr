@@ -24,10 +24,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    
 
     'core',       # your core app
     'expenses',   # your expenses app
     'storages',   # for AWS S3
+
+    'django_extensions',
 ]
 
 MIDDLEWARE = [

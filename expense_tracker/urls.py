@@ -5,7 +5,7 @@ from django.conf.urls.static import static
 from expenses import views
 
 urlpatterns = [
-    path('', views.redirect_to_dashboard, name='redirect_to_dashboard'),  # Root redirect
+    path('', views.redirect_to_dashboard_or_login, name='home'),  # Root redirect
     path('admin/', admin.site.urls),
     path('upload/', views.upload_expense, name='upload_expense'),
     path('expenses/', views.expense_list, name='expense_list'),
