@@ -17,11 +17,10 @@ import logging
 logger = logging.getLogger(__name__)
 
 def redirect_to_dashboard_or_login(request):
-    logger.warning("Root view called")
+    print(">>> REDIRECT VIEW TRIGGERED <<<")  # Use print instead of logger
     if request.user.is_authenticated:
         return redirect('/dashboard/')
     return redirect('/accounts/login/')
-
 
 @login_required
 def upload_expense(request):

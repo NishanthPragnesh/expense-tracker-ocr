@@ -44,6 +44,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'expense_tracker.urls'
+print("🔍 ROOT_URLCONF =", ROOT_URLCONF)
 
 TEMPLATES = [
     {
