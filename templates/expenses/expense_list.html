@@ -48,7 +48,7 @@
             </td>
             <td>
                 {% if expense.notes and expense.notes.strip %}
-                    {{ expense.notes|truncatewords:20 }}
+                    <pre style="white-space: pre-wrap; max-height: 200px; overflow-y: auto;">{{ expense.notes }}</pre>
                 {% else %}
                     <em>No notes extracted</em>
                 {% endif %}

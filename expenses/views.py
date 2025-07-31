@@ -16,6 +16,19 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+def export_expenses_csv(request):
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="expenses.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['Title', 'Amount', 'Category', 'Date'])
+
+    expenses = Expense.objects.all()
+    for expense in expenses:
+        writer.writerow([expense.title, expense.amount, expense.category, expense.date])
+
+    return response
+
 def redirect_to_dashboard_or_login(request):
     print(">>> REDIRECT VIEW TRIGGERED <<<")  # Use print instead of logger
     if request.user.is_authenticated:
@@ -34,8 +47,9 @@ def upload_expense(request):
             try:
                 img = Image.open(expense.receipt.path)
                 text = pytesseract.image_to_string(img)
+                MAX_NOTES_LENGTH = 10000 
                 if text.strip():
-                    expense.notes = text.strip()[:1000]
+                    expense.notes = text.strip()[:MAX_NOTES_LENGTH]
                 else:
                     expense.notes = "No readable text found in receipt"
                 expense.save()

@@ -7,7 +7,7 @@ class Expense(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     date = models.DateField()
     receipt = models.ImageField(upload_to='receipts/')
-    notes = models.TextField(blank=True)
+    notes = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return self.title

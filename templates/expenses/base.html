@@ -23,7 +23,6 @@
 
 <nav class="navbar navbar-expand-lg fixed-top">
   <div class="container-fluid">
-    <a class="navbar-brand" href="{% url 'admin_dashboard' %}">Expense Admin</a>
     <div class="collapse navbar-collapse">
       <ul class="navbar-nav me-auto">
         <li class="nav-item">
@@ -33,10 +32,11 @@
           <a class="nav-link" href="{% url 'expense_list' %}">Expense List</a>
         </li>
       </ul>
-      <span class="navbar-text me-3">
-        Welcome, {{ request.user.username }}
-      </span>
-      <a class="btn btn-outline-light btn-sm" href="{% url 'logout' %}">Logout</a>
+      <div class="d-flex align-items-center">
+        <span class="text-white me-3">Welcome, {{ user.username }}</span>
+        <a href="{% url 'logout' %}" class="btn btn-outline-light btn-sm">Logout</a>
+      </div>
+      
     </div>
   </div>
 </nav>
