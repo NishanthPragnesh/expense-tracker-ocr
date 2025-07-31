@@ -1,86 +1,32 @@
-# Expense Tracker with OCR and AWS S3
+# 🧾 Expense Tracker with OCR (Django + MySQL)
 
-A Django-based web application to upload and manage your expenses with OCR-powered receipt digitization and AWS S3 file storage.
+A Django-based web application to upload, digitize, and manage your expenses using OCR-powered receipt extraction. Fully local setup with MySQL database and a responsive UI for seamless expense tracking.
+
+---
 
 ## 🚀 Features
 
-User Authentication: Registration, login, logout (built on Django Auth).
+- **User Authentication**: Sign up, login, and logout with Django’s built-in auth system.
+- **Receipt Upload with OCR**: Upload receipt images and extract text using Tesseract OCR.
+- **Expense Management**: View, search, filter, sort, and manage your expenses easily.
+- **CSV Export**: Download your expense records as a CSV file (with filtering).
+- **Admin Dashboard**: Monitor total users, top spenders, and key stats (with Chart.js).
+- **Responsive UI**: Clean interface using Bootstrap 5.
+- **Role Management**: Superusers have admin access; normal users can manage only their data.
 
-Expense Upload: Upload receipts; automatically extract text with Tesseract OCR.
-
-Expense Management: Filter, sort your expenses by title, amount, date, notes.
-
-Admin Dashboard: View total users/expenses, top users, and charts powered by Chart.js.
-
-CSV Export: Download your filtered expense list as CSV.
-
-AWS S3 Integration: Store all uploaded receipts in an S3 bucket.
-
-Responsive UI: Bootstrap‑based templates for a clean look.
-
+---
 
 ## 📦 Tech Stack
 
-Backend: Django 5.2.3, MySQL (via mysqlclient)
+| Layer         | Tech                        |
+|---------------|-----------------------------|
+| Backend       | Django 5.2.3                |
+| Database      | MySQL                       |
+| OCR Engine    | Tesseract via `pytesseract` |
+| Frontend      | Bootstrap 5, Chart.js       |
+| File Handling | Local media & static dirs   |
+| Deployment    | Localhost                   |
 
-OCR: Tesseract (via pytesseract)
-
-Storage: AWS S3 (via django-storages)
-
-Frontend: Bootstrap 5, Chart.js
-
-Deployment: AWS EC2
-
-## 🛠 Installation & Setup
-
-Clone the repository:
-
-> git clone https://github.com/yourusername/expense-tracker.git
-> cd expense-tracker
-
-Create & activate a virtual environment:
-
-> python3 -m venv venv
-> source venv/bin/activate  # Linux/macOS
-> venv\Scripts\activate     # Windows
-
-Install dependencies:
-
-> pip install -r requirements.txt
-
-Configure environment variables: Copy .env.example to .env and fill in your values.Required: SECRET_KEY, DEBUG, MySQL credentials, AWS keys, bucket name.
-
-Run database migrations:
-
-> python manage.py migrate
-
-Collect static files (for production):
-
-> python manage.py collectstatic
-
-Create a superuser:
-
-> python manage.py createsuperuser
-
-Start the development server:
-
-> python manage.py runserver
-
-## ☁️ AWS Deployment
-
-Follow these steps to deploy on an EC2 instance with MySQL and S3 storage:
-
-Provision EC2 with Ubuntu and security groups open for ports 22, 8000 (Custom TCP).
-
-Install system packages:
-
-> sudo apt update
-
-> sudo apt install python3-pip python3-dev libmysqlclient-dev build-essential git awscli
-
-Clone your repo and follow the installation steps above on the server.
-
-Configure ALLOWED_HOSTS and SSL (HTTPS) in settings.py.
-
+---
 
 
